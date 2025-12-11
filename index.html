@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Bore Clearance Report</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom Tailwind Configuration */
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-blue': '#1e40af', /* Dark Blue (Headers, Titles) */
+                        'secondary-gray': '#f1f5f9', /* Light Gray (Background, Block fills) */
+                        'text-dark': '#374151', /* Darker Text */
+                        'border-light': '#e5e7eb', /* Light Border */
+                    }
+                }
+            }
+        }
+    </style>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e2e8f0;
+            color: #374151;
+        }
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0; /* Remove padding here to let the shadow frame the content */
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* --- Input Styles (Visual Refinement) --- */
+        input:not([type="file"]), textarea, select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+            background-color: #ffffff;
+        }
+        input:focus, textarea:focus, select:focus {
+            border-color: #1e40af;
+            box-shadow: 0 0 0 1px rgba(30, 64, 175, 0.4);
+            outline: none;
+        }
+        .input-label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 500;
+            color: #4b5563;
+            font-size: 0.875rem; /* Small text for labels */
+        }
+        .input-group {
+            margin-bottom: 12px;
+        }
+
+        /* --- Header / Title Area --- */
+        .report-header {
+            background-color: #1e40af; /* Primary Blue Background */
+            color: white;
+            padding: 24px 32px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .report-title {
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        .report-subtitle {
+            font-size: 1.1rem;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+        .logo-container img {
+            max-height: 50px;
+            width: auto;
+        }
+        .logo-container #certlocLogo {
+            max-height: 60px;
+            margin-left: 15px;
+        }
+
+
+        /* --- Report Sections --- */
+        .section-heading {
+            background-color: #eef2ff; /* Very Light Blue/Lavender */
+            color: #1e40af;
+            padding: 8px 16px;
+            margin: 20px 0 15px 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            border-left: 5px solid #1e40af;
+        }
+
+        /* Utility Entry Styling */
+        .utility-entry {
+            background-color: #f8fafc; /* Lighter background for entries */
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        /* Print Specific Styles - Crucial for professional output */
+        @media print {
+            body { background-color: #ffffff; }
+            .container { 
+                box-shadow: none; 
+                margin: 0; 
+                max-width: none;
+                border-radius: 0;
+            }
+            .no-print { display: none !important; }
+            
+            /* Ensure fixed print titles and logo placement */
+            .report-header {
+                background-color: #1e40af !important; /* Force color print */
+                -webkit-print-color-adjust: exact;
+                color: white !important;
+                padding: 15px 25px;
+                margin: 0;
+                border-radius: 0;
+            }
+            .content-area { padding: 10px 25px; } /* Apply padding to content area */
+
+            /* Style for input data in print view */
+            .report-data-label { font-weight: 600; color: #374151; font-size: 0.9rem; }
+            .report-data-value { 
+                border-bottom: 1px dashed #cccccc; /* Dotted line under data for clean look */
+                display: block; 
+                margin-top: 2px;
+                padding-bottom: 2px;
+                font-size: 1rem;
+            }
+            
+            /* Remove input fields and replace with static text */
+            input:not([type="file"]), textarea, select {
+                border: none !important;
+                box-shadow: none !important;
+                background-color: transparent !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                font-size: 1rem !important;
+                color: #000 !important;
+            }
+            .input-group label { display: none; } /* Hide form labels in print */
+
+            /* Specific section adjustments */
+            .section-heading {
+                background-color: #eef2ff !important;
+                -webkit-print-color-adjust: exact;
+                color: #1e40af !important;
+                border-left-color: #1e40af !important;
+                page-break-after: avoid;
+                margin-top: 15px;
+                margin-bottom: 10px;
+            }
+            .utility-entry {
+                page-break-inside: avoid;
+                background-color: #f8fafc !important;
+                -webkit-print-color-adjust: exact;
+                border: 1px solid #ccc !important;
+                margin-bottom: 10px;
+            }
+            .disclaimer-box {
+                background-color: #fefcbf !important; /* Light yellow print */
+                -webkit-print-color-adjust: exact;
+                border: 1px solid #d97706 !important;
+                color: #92400e !important;
+                page-break-inside: avoid;
+                margin: 15px 25px; /* Adjust margin for print */
+            }
+            
+            /* Force table contents to stay together */
+            .utility-entries-grid {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <div class="report-header">
+            <div class="logo-container">
+                <img id="companyLogo" src="groundscan_logo.png" alt="Company Logo" class="inline-block">
+            </div>
+            <div class="text-center flex-grow">
+                <h1 class="report-title">TEST BORE CLEARANCE REPORT</h1>
+                <p class="report-subtitle">AS 5488 Quality Level B (Non-Destructive Locating)</p>
+            </div>
+            <div class="logo-container">
+                 <img id="certlocLogo" src="certloc_logo.png" alt="CERTLOC Logo" class="inline-block">
+            </div>
+        </div>
+
+        <div class="content-area p-8 no-print">
+
+            <div class="disclaimer-box p-4 rounded-lg text-sm mb-6">
+                <p class="font-semibold mb-2">IMPORTANT SAFETY DISCLAIMER:</p>
+                <p>This report is based on information gathered at the time of investigation. It is recommended that services be **potholed for confirmation (QL-A)** prior to any construction or excavations. This report does not replace the need for valid **BYDA** (Dial Before You Dig) plans to be always on site.</p>
+            </div>
+
+            <h2 class="section-heading">Project & Site Details</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 mb-6">
+                <div class="input-group">
+                    <label for="projectName" class="input-label">Project Name:</label>
+                    <input type="text" id="projectName" placeholder="e.g., Highway Upgrade - Test Bore Location 1">
+                </div>
+                <div class="input-group">
+                    <label for="clientName" class="input-label">Client Name:</label>
+                    <input type="text" id="clientName" placeholder="e.g., Client Pty Ltd">
+                </div>
+                <div class="input-group">
+                    <label for="projectReferenceNumber" class="input-label">Project Reference Number:</label>
+                    <input type="text" id="projectReferenceNumber" placeholder="e.g., PRJ-2025-001">
+                </div>
+                <div class="input-group">
+                    <label for="locatingDate" class="input-label">Locating Date(s):</label>
+                    <input type="date" id="locatingDate">
+                </div>
+                <div class="input-group md:col-span-2">
+                    <label for="siteAddress" class="input-label">Site Address/Location (Include GPS if possible):</label>
+                    <textarea id="siteAddress" rows="2" placeholder="e.g., 42 Forest Road, Rockley NSW (Lat: -33.456, Lon: 149.789)"></textarea>
+                    <button type="button" class="get-gps-button bg-blue-600 hover:bg-blue-700 text-white text-xs py-1 px-3 rounded-md mt-1" data-target-textarea="siteAddress" data-target-status="siteAddressGpsStatus">Get Current GPS Location</button>
+                    <p id="siteAddressGpsStatus" class="text-xs text-gray-500 mt-1"></p>
+                </div>
+            </div>
+
+            <h2 class="section-heading">Locator & Equipment</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 mb-6">
+                <div class="input-group">
+                    <label for="locatorName" class="input-label">Locator Name:</label>
+                    <input type="text" id="locatorName" value="Zane Somerville" placeholder="e.g., Zane Smith">
+                </div>
+                <div class="input-group">
+                    <label for="locatorCertificationNumber" class="input-label">Locator Certification Number:</label>
+                    <input type="text" id="locatorCertificationNumber" value="CL-00004732" placeholder="e.g., CERTLOC CL-1234">
+                </div>
+                <div class="input-group">
+                    <label for="equipmentUsed" class="input-label">Equipment Used (Multi-select):</label>
+                    <select id="equipmentUsed" multiple class="form-multiselect h-32">
+                        <option value="RD8200 (Radio Detection)">RD8200 (Radio Detection)</option>
+                        <option value="GPR (Ground Penetrating Radar)">GPR (Ground Penetrating Radar)</option>
+                        <option value="Vivax Metrotech vLoc3-Pro">Vivax Metrotech vLoc3-Pro</option>
+                        <option value="Trimble R10 (GPS/GNSS)">Trimble R10 (GPS/GNSS)</option>
+                        <option value="Non-Destructive Digging (NDD)">Non-Destructive Digging (NDD)</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="dbydRefNumbers" class="input-label">BYDA Reference Number(s):</label>
+                    <input type="text" id="dbydRefNumbers" placeholder="e.g., 1234567890">
+                    <label for="dbydInquiryDate" class="input-label mt-3">BYDA Inquiry Date:</label>
+                    <input type="date" id="dbydInquiryDate">
+                </div>
+            </div>
+
+            <h2 class="section-heading">Service Clearance Findings</h2>
+            <div id="serviceEntries" class="utility-entries-grid">
+                </div>
+            <button id="addServiceButton" class="bg-primary-blue hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-lg mb-6" type="button">+ Add Utility/Clearance Entry</button>
+
+            <h2 class="section-heading">Summary & Recommendations</h2>
+            <div class="input-group mb-4">
+                <label for="executiveSummary" class="input-label">Executive Summary / Scope of Work:</label>
+                <textarea id="executiveSummary" rows="6" placeholder="Provide a concise overview of the report's purpose (e.g., clearance for 100mm test bore), a summary of located services, and the area surveyed."></textarea>
+            </div>
+            <div class="input-group mb-6">
+                <label for="criticalRisks" class="input-label">Critical Risks / Conflicts (Focus on Test Bore Location):</label>
+                <textarea id="criticalRisks" rows="4" placeholder="e.g., No services were located within the 1.5m radius of the proposed test bore location, indicating CLEAR clearance. Hand-digging is recommended down to 1.2m if bore depth exceeds 1.5m."></textarea>
+            </div>
+            <div class="input-group mb-6">
+                <label for="damageFound" class="input-label">Damage to Services Found During Locating (If Any):</label>
+                <textarea id="damageFound" rows="3" placeholder="e.g., No damage found on services."></textarea>
+            </div>
+
+            <h2 class="section-heading">Site Photos & Reference</h2>
+            <p class="text-sm text-gray-600 mb-4">Upload photos of the marked-up site (e.g., service paths, clear areas). Photos with *prior markup* are ideal.</p>
+            <div id="photoEntries">
+                </div>
+            <button id="addPhotoButton" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg mb-8" type="button">+ Add Site Photo</button>
+
+            <button id="printReportButton" class="bg-green-700 hover:bg-green-800 text-white font-semibold py-3 px-8 rounded-lg shadow-lg" type="button">Print Professional Report</button>
+
+        </div>
+
+        <div class="report-output hidden p-8">
+            
+            <div class="text-center mb-6 text-text-dark">
+                <p class="text-xl font-bold" id="printCompanyName">GROUNDSCAN</p>
+                <p class="text-sm" id="printCompanyABN">ABN: 93 727 813 582</p>
+                <p class="text-sm" id="printCompanyContact">Phone: 0423407793 | Email: admin@groundscan.com.au</p>
+            </div>
+
+            <div class="report-section mb-8">
+                <h3 class="section-heading">1. Project & Site Details</h3>
+                <div class="grid grid-cols-2 gap-x-8 gap-y-4 text-sm text-text-dark p-4 bg-secondary-gray rounded-lg">
+                    <div class="report-data-item">
+                        <span class="report-data-label">Project Name:</span>
+                        <span class="report-data-value" data-bind="projectName"></span>
+                    </div>
+                    <div class="report-data-item">
+                        <span class="report-data-label">Client Name:</span>
+                        <span class="report-data-value" data-bind="clientName"></span>
+                    </div>
+                    <div class="report-data-item">
+                        <span class="report-data-label">Project Ref. No:</span>
+                        <span class="report-data-value" data-bind="projectReferenceNumber"></span>
+                    </div>
+                    <div class="report-data-item">
+                        <span class="report-data-label">Report Date:</span>
+                        <span class="report-data-value" data-bind="reportDate"></span>
+                    </div>
+                    <div class="report-data-item md:col-span-2">
+                        <span class="report-data-label">Site Address/Location:</span>
+                        <span class="report-data-value" data-bind="siteAddress"></span>
+                    </div>
+                    <div class="report-data-item">
+                        <span class="report-data-label">Locating Date(s):</span>
+                        <span class="report-data-value" data-bind="locatingDate"></span>
+                    </div>
+                    <div class="report-data-item">
+                        <span class="report-data-label">Locator/Tech:</span>
+                        <span class="report-data-value" data-bind="locatorName"></span>
+                    </div>
+                    <div class="report-data-item">
+                        <span class="report-data-label">Cert. No:</span>
+                        <span class="report-data-value" data-bind="locatorCertificationNumber"></span>
+                    </div>
+                    <div class="report-data-item">
+                        <span class="report-data-label">Equipment Used:</span>
+                        <span class="report-data-value" data-bind="equipmentUsed"></span>
+                    </div>
+                    <div class="report-data-item">
+                        <span class="report-data-label">BYDA Ref. No:</span>
+                        <span class="report-data-value" data-bind="dbydRefNumbers"></span>
+                    </div>
+                    <div class="report-data-item">
+                        <span class="report-data-label">BYDA Inquiry Date:</span>
+                        <span class="report-data-value" data-bind="dbydInquiryDate"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="report-section mb-8">
+                <h3 class="section-heading">2. Executive Summary & Clearance Status</h3>
+                <div class="text-base text-text-dark whitespace-pre-wrap p-4 bg-secondary-gray rounded-lg" data-bind="executiveSummary"></div>
+            </div>
+
+            <div class="report-section mb-8">
+                <h3 class="section-heading">3. Utility Locating Findings (QL-B)</h3>
+                <div id="printServiceEntries">
+                    </div>
+                <div class="mt-4 p-4 border border-gray-300 bg-red-50 text-red-800 rounded-lg font-semibold">
+                    <p>Critical Risks/Conflicts:</p>
+                    <p class="mt-1 font-normal text-sm whitespace-pre-wrap" data-bind="criticalRisks"></p>
+                </div>
+            </div>
+
+            <div class="report-section mb-8">
+                <h3 class="section-heading">4. AS 5488 Quality Levels & Marking Legend</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 border border-border-light rounded-lg">
+                        <h4 class="text-lg font-semibold mb-2 text-primary-blue">Quality Levels (AS 5488-2019)</h4>
+                        <p class="text-sm mb-2"><strong>QLA:</strong> Visualization/Confirmation of service by NDD. **(Highest Accuracy)**</p>
+                        <p class="text-sm mb-2"><strong>QLB:</strong> Located using radio detection/GPR. Accuracy +/-300mm position. **(Standard Accuracy)**</p>
+                        <p class="text-sm mb-2"><strong>QLC:</strong> Marked using surface features (pits, manholes, etc.).</p>
+                        <p class="text-sm"><strong>QLD:</strong> Marked using BYDA plans only.</p>
+                    </div>
+
+                    <div class="p-4 border border-border-light rounded-lg">
+                        <h4 class="text-lg font-semibold mb-2 text-primary-blue">Site Marking Colour Legend</h4>
+                        <div class="grid grid-cols-2 gap-2 text-sm">
+                            <div class="color-legend-item"><div class="color-box" style="background-color: #FFC0CB;"></div>PINK - GPR/UNKNOWN</div>
+                            <div class="color-legend-item"><div class="color-box" style="background-color: #FFFFFF; border: 1px solid #333;"></div>WHITE - COMMUNICATION</div>
+                            <div class="color-legend-item"><div class="color-box" style="background-color: #FFA500;"></div>ORANGE - ELECTRICAL</div>
+                            <div class="color-legend-item"><div class="color-box" style="background-color: #0000FF;"></div>BLUE - WATER</div>
+                            <div class="color-legend-item"><div class="color-box" style="background-color: #FFFF00; border: 1px solid #333;"></div>YELLOW - GAS</div>
+                            <div class="color-legend-item"><div class="color-box" style="background-color: #008000;"></div>GREEN - STORMWATER</div>
+                            <div class="color-legend-item"><div class="color-box" style="background-color: #800080;"></div>PURPLE - SEWER</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="report-section mb-8">
+                <h3 class="section-heading">5. Site Photos & Visual Evidence</h3>
+                <div id="printPhotoEntries" class="grid grid-cols-2 gap-6">
+                    </div>
+            </div>
+            
+            <div class="report-section mb-8">
+                <h3 class="section-heading">6. Safety & General Notes</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 text-sm text-text-dark">
+                    <div>
+                        <span class="report-data-label">General Safety Measures:</span>
+                        <span class="report-data-value whitespace-pre-wrap" data-bind="safetyMeasures"></span>
+                    </div>
+                    <div>
+                        <span class="report-data-label">Damage to Services Found:</span>
+                        <span class="report-data-value whitespace-pre-wrap" data-bind="damageFound"></span>
+                    </div>
+                    <div class="md:col-span-2">
+                        <span class="report-data-label">Excavation Precautions/Recommendations:</span>
+                        <span class="report-data-value whitespace-pre-wrap" data-bind="excavationPrecautions"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="disclaimer-box p-4 rounded-lg text-xs mt-10">
+                <p class="font-bold">LIABILITY & DISCLAIMER NOTICE:</p>
+                <p>This report has been compiled by a certified locator using professional-grade equipment in accordance with AS 5488-2019 (Quality Level B). The information is based on conditions at the time of the survey. The client is responsible for cross-referencing all marked data with engineering and design plans and obtaining QL-A (Potholing) confirmation prior to any ground penetration. [GROUNDSCAN] assumes no liability for damages or conflicts arising from work undertaken without QL-A verification.</p>
+            </div>
+            
+        </div>
+    </div>
+    
+    <script>
+        // Data structure for utility entries
+        const serviceTemplate = {
+            assetType: '',
+            method: 'EML / GPR',
+            depth: '',
+            accuracy: 'QLB',
+            comments: 'Clear markings provided on surface.',
+            remove: false
+        };
+
+        let serviceCounter = 0;
+        let photoCounter = 0;
+
+        /**
+         * Generates the dropdown options for utility accuracy based on AS 5488.
+         */
+        function generateAccuracyOptions() {
+            const accuracyOptions = [
+                { value: "QLA", label: "QL-A (Potholing - Exact Position)" },
+                { value: "QLB", label: "QL-B (±300mm Horizontal - Non-Destructive)" },
+                { value: "QLC", label: "QL-C (Visual Site Evidence)" },
+                { value: "QLD", label: "QL-D (BYDA Plans/Records)" }
+            ];
+
+            return accuracyOptions.map(option =>
+                `<option value="${option.value}">${option.label}</option>`
+            ).join('');
+        }
+        
+        /**
+         * Generates a unique ID for a photo entry element.
+         * @returns {string} The unique ID.
+         */
+        function generateUniquePhotoId() {
+            return `photo-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+        }
+
+
+        /**
+         * Adds a new utility finding entry to the form.
+         * @param {Object} [data=serviceTemplate] - Initial data for the entry.
+         */
+        function addServiceEntry(data = serviceTemplate) {
+            serviceCounter++;
+            const entryId = `service-${serviceCounter}`;
+            const container = document.getElementById('serviceEntries');
+
+            const newEntry = document.createElement('div');
+            newEntry.classList.add('utility-entry', 'grid', 'grid-cols-1', 'sm:grid-cols-2', 'md:grid-cols-5', 'gap-4');
+            newEntry.id = entryId;
+
+            newEntry.innerHTML = `
+                <div class="input-group md:col-span-2">
+                    <label class="input-label">Asset Type</label>
+                    <input type="text" value="${data.assetType}" placeholder="e.g., Telstra Fibre Optic" class="asset-type-input">
+                </div>
+                <div class="input-group md:col-span-1">
+                    <label class="input-label">Locating Method</label>
+                    <input type="text" value="${data.method}" class="method-input">
+                </div>
+                <div class="input-group md:col-span-1">
+                    <label class="input-label">Depth (m)</label>
+                    <input type="text" value="${data.depth}" placeholder="e.g., 0.6m or U/K" class="depth-input">
+                </div>
+                <div class="input-group md:col-span-1 relative">
+                    <label class="input-label">Quality Level</label>
+                    <select class="accuracy-select">
+                        ${generateAccuracyOptions()}
+                    </select>
+                    <button type="button" class="remove-utility-btn bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-2 rounded absolute top-0 right-0 -mt-2 -mr-2 print:hidden">
+                        Remove
+                    </button>
+                </div>
+                <div class="input-group md:col-span-5">
+                    <label class="input-label">Comments / Markings (e.g., GPS point, specific marking details)</label>
+                    <input type="text" value="${data.comments}" placeholder="e.g., Marked with Telstra pink line and asset tags. GPS: -33.123, 149.456" class="comments-input">
+                </div>
+            `;
+
+            // Set the default or loaded accuracy value
+            const selectElement = newEntry.querySelector('.accuracy-select');
+            selectElement.value = data.accuracy; 
+
+            const removeButton = newEntry.querySelector('.remove-utility-btn');
+            removeButton.addEventListener('click', () => {
+                newEntry.remove();
+                saveReportData(); 
+                updatePrintOutput();
+            });
+
+            container.appendChild(newEntry);
+            saveReportData();
+            updatePrintOutput();
+        }
+
+        /**
+         * Adds a new photo entry to the form.
+         * @param {Object} [data={}] - Initial data for the entry.
+         */
+        function addPhotoEntry(data = {}) {
+            photoCounter++;
+            const entryId = generateUniquePhotoId();
+            const container = document.getElementById('photoEntries');
+            
+            const newEntry = document.createElement('div');
+            newEntry.classList.add('photo-entry', 'grid', 'grid-cols-1', 'md:grid-cols-3', 'gap-4');
+            newEntry.id = entryId;
+
+            newEntry.innerHTML = `
+                <div class="input-group md:col-span-1">
+                    <label class="input-label">Photo Description</label>
+                    <input type="text" value="${data.description || ''}" placeholder="e.g., Site overview showing marked clear area" class="photo-description-input">
+                    <label class="input-label mt-3">Date/Time Taken</label>
+                    <input type="datetime-local" value="${data.dateTime || ''}" class="photo-datetime-input">
+                </div>
+                <div class="input-group md:col-span-2 relative">
+                    <label class="input-label">Upload Photo File (Must be JPEG/PNG)</label>
+                    <input type="file" accept="image/*" class="photo-file-input" onchange="previewImage(event, this, 'preview-${entryId}')">
+                    <img id="preview-${entryId}" src="${data.url || ''}" class="photo-preview mt-2 rounded-lg max-w-full h-auto" style="max-height: 300px; ${data.url ? 'display: block;' : 'display: none;'}">
+                    <button type="button" class="remove-button absolute top-0 right-0 mt-1 mr-1" onclick="removePhotoEntry('${entryId}')">Remove</button>
+                </div>
+            `;
+            
+            // Set the initial date/time if not loaded
+            if (!data.dateTime) {
+                const now = new Date();
+                const offset = now.getTimezoneOffset() * 60000; // offset in milliseconds
+                const localISOTime = (new Date(now - offset)).toISOString().slice(0, 16);
+                newEntry.querySelector('.photo-datetime-input').value = localISOTime;
+            }
+
+            container.appendChild(newEntry);
+            saveReportData();
+            updatePrintOutput();
+
+            // Set up event listeners for inputs
+            newEntry.querySelector('.photo-description-input').addEventListener('input', saveReportData);
+            newEntry.querySelector('.photo-datetime-input').addEventListener('input', saveReportData);
+            newEntry.querySelector('.photo-file-input').addEventListener('change', saveReportData);
+        }
+
+        /** Removes a photo entry */
+        function removePhotoEntry(entryId) {
+            document.getElementById(entryId).remove();
+            saveReportData();
+            updatePrintOutput();
+        }
+
+        /** Previews an uploaded image file */
+        function previewImage(event, inputElement, previewId) {
+            const file = event.target.files[0];
+            const previewElement = document.getElementById(previewId);
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewElement.src = e.target.result;
+                    previewElement.style.display = 'block';
+                    saveReportData(); // Save data with base64 URL
+                    updatePrintOutput();
+                };
+                reader.readAsDataURL(file);
+            } else {
+                previewElement.src = '';
+                previewElement.style.display = 'none';
+            }
+        }
+        
+        /** Gets current GPS location and fills the target textarea */
+        function getGpsLocation(targetId, statusId) {
+            const textarea = document.getElementById(targetId);
+            const statusElement = document.getElementById(statusId);
+            
+            if (navigator.geolocation) {
+                statusElement.textContent = "Attempting to get location...";
+                navigator.geolocation.getCurrentPosition(position => {
+                    const lat = position.coords.latitude.toFixed(6);
+                    const lon = position.coords.longitude.toFixed(6);
+                    const accuracy = position.coords.accuracy.toFixed(1);
+                    
+                    textarea.value += `\n(GPS: Lat: ${lat}, Lon: ${lon} - Accuracy: ${accuracy}m)`;
+                    statusElement.textContent = `Location updated successfully. Accuracy: ${accuracy}m.`;
+                    statusElement.style.color = 'green';
+                    saveReportData();
+                    updatePrintOutput();
+                }, error => {
+                    let message = "Geolocation failed: ";
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            message += "User denied the request for Geolocation.";
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            message += "Location information is unavailable.";
+                            break;
+                        case error.TIMEOUT:
+                            message += "The request to get user location timed out.";
+                            break;
+                        case error.UNKNOWN_ERROR:
+                            message += "An unknown error occurred.";
+                            break;
+                    }
+                    statusElement.textContent = message;
+                    statusElement.style.color = 'red';
+                }, { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 });
+            } else {
+                statusElement.textContent = "Geolocation is not supported by this browser.";
+                statusElement.style.color = 'red';
+            }
+        }
+
+
+        /**
+         * Collects all form data into a structured object.
+         */
+        function collectFormData() {
+            const services = Array.from(document.querySelectorAll('#serviceEntries .utility-entry')).map(entry => {
+                return {
+                    assetType: entry.querySelector('.asset-type-input').value,
+                    method: entry.querySelector('.method-input').value,
+                    depth: entry.querySelector('.depth-input').value,
+                    accuracy: entry.querySelector('.accuracy-select').value,
+                    comments: entry.querySelector('.comments-input').value
+                };
+            });
+            
+            const photos = Array.from(document.querySelectorAll('#photoEntries .photo-entry')).map(entry => {
+                const previewImg = entry.querySelector('.photo-preview');
+                return {
+                    description: entry.querySelector('.photo-description-input').value,
+                    dateTime: entry.querySelector('.photo-datetime-input').value,
+                    url: previewImg ? previewImg.src : ''
+                };
+            });
+
+            // Get selected options from multi-select
+            const equipmentSelect = document.getElementById('equipmentUsed');
+            const equipmentUsed = Array.from(equipmentSelect.selectedOptions).map(option => option.value).join(', ');
+
+            return {
+                // Header Info
+                companyName: document.getElementById('companyName').value,
+                companyABN: document.getElementById('companyABN').value,
+                companyContact: document.getElementById('companyContact').value,
+                // Project & Site
+                projectName: document.getElementById('projectName').value,
+                clientName: document.getElementById('clientName').value,
+                projectReferenceNumber: document.getElementById('projectReferenceNumber').value,
+                siteAddress: document.getElementById('siteAddress').value,
+                reportDate: document.getElementById('reportDate').value,
+                locatingDate: document.getElementById('locatingDate').value,
+                locatorName: document.getElementById('locatorName').value,
+                locatorCertificationNumber: document.getElementById('locatorCertificationNumber').value,
+                equipmentUsed: equipmentUsed,
+                dbydRefNumbers: document.getElementById('dbydRefNumbers').value,
+                dbydInquiryDate: document.getElementById('dbydInquiryDate').value,
+                // Summary & Findings
+                executiveSummary: document.getElementById('executiveSummary').value,
+                criticalRisks: document.getElementById('criticalRisks').value,
+                damageFound: document.getElementById('damageFound').value,
+                safetyMeasures: document.getElementById('safetyMeasures').value,
+                excavationPrecautions: document.getElementById('excavationPrecautions').value,
+                // Collections
+                services: services,
+                photos: photos
+            };
+        }
+
+        /**
+         * Populates the report fields from storage on load.
+         */
+        function loadReportData() {
+            try {
+                const storedData = JSON.parse(localStorage.getItem('clearanceReportData'));
+                if (storedData) {
+                    // Populate simple text/date fields
+                    Object.keys(storedData).forEach(key => {
+                        const element = document.getElementById(key);
+                        if (element && typeof storedData[key] !== 'object') {
+                            if (element.tagName === 'SELECT' && element.hasAttribute('multiple')) {
+                                // Handle multi-select
+                                const values = storedData[key].split(', ').map(v => v.trim());
+                                Array.from(element.options).forEach(option => {
+                                    option.selected = values.includes(option.value);
+                                });
+                            } else {
+                                element.value = storedData[key] || '';
+                            }
+                        }
+                    });
+
+                    // Clear and load service entries
+                    document.getElementById('serviceEntries').innerHTML = '';
+                    if (storedData.services && storedData.services.length > 0) {
+                        storedData.services.forEach(addServiceEntry);
+                    } else {
+                        // Default: Add one empty entry
+                        addServiceEntry(serviceTemplate); 
+                    }
+                    
+                    // Clear and load photo entries
+                    document.getElementById('photoEntries').innerHTML = '';
+                    if (storedData.photos && storedData.photos.length > 0) {
+                        storedData.photos.forEach(addPhotoEntry);
+                    }
+                    
+                } else {
+                    // Default for first run
+                    addServiceEntry(serviceTemplate);
+                }
+            } catch (e) {
+                console.error("Error loading report data from localStorage:", e);
+                // Fallback to default entry on error
+                document.getElementById('serviceEntries').innerHTML = '';
+                addServiceEntry(serviceTemplate);
+            }
+        }
+
+        /**
+         * Saves all form data to storage.
+         */
+        function saveReportData() {
+            const data = collectFormData();
+            localStorage.setItem('clearanceReportData', JSON.stringify(data));
+        }
+
+        /**
+         * Renders form data into the print-specific output area.
+         */
+        function updatePrintOutput() {
+            const data = collectFormData();
+            const printOutput = document.querySelector('.report-output');
+
+            // 1. Update simple bound fields
+            document.getElementById('printCompanyName').textContent = data.companyName;
+            document.getElementById('printCompanyABN').textContent = data.companyABN;
+            document.getElementById('printCompanyContact').textContent = data.companyContact;
+
+            document.querySelectorAll('[data-bind]').forEach(element => {
+                const key = element.getAttribute('data-bind');
+                if (data.hasOwnProperty(key)) {
+                    element.textContent = data[key];
+                }
+            });
+
+            // 2. Update service entries table
+            const printServiceEntriesContainer = document.getElementById('printServiceEntries');
+            printServiceEntriesContainer.innerHTML = ''; // Clear previous entries
+
+            if (data.services.length > 0) {
+                const tableHtml = `
+                    <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-300 border border-gray-300">
+                        <thead class="bg-primary-blue text-white">
+                            <tr>
+                                <th class="py-2 px-3 text-left text-xs font-semibold uppercase tracking-wider">Asset Type</th>
+                                <th class="py-2 px-3 text-left text-xs font-semibold uppercase tracking-wider">Method</th>
+                                <th class="py-2 px-3 text-left text-xs font-semibold uppercase tracking-wider">Depth (m)</th>
+                                <th class="py-2 px-3 text-left text-xs font-semibold uppercase tracking-wider">QL</th>
+                                <th class="py-2 px-3 text-left text-xs font-semibold uppercase tracking-wider">Comments / GPS Ref</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 bg-white text-text-dark text-sm">
+                            ${data.services.map(service => `
+                                <tr>
+                                    <td class="py-2 px-3">${service.assetType}</td>
+                                    <td class="py-2 px-3">${service.method}</td>
+                                    <td class="py-2 px-3">${service.depth}</td>
+                                    <td class="py-2 px-3">${service.accuracy}</td>
+                                    <td class="py-2 px-3">${service.comments}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                    </div>
+                `;
+                printServiceEntriesContainer.innerHTML = tableHtml;
+            }
+
+            // 3. Update photo entries
+            const printPhotoEntriesContainer = document.getElementById('printPhotoEntries');
+            printPhotoEntriesContainer.innerHTML = '';
+            
+            data.photos.forEach(photo => {
+                if (photo.url) {
+                    const photoDiv = document.createElement('div');
+                    photoDiv.classList.add('flex', 'flex-col', 'break-inside-avoid');
+                    photoDiv.innerHTML = `
+                        <img src="${photo.url}" alt="${photo.description}" class="w-full h-auto object-cover rounded-lg border border-gray-300 mb-2">
+                        <p class="text-xs font-semibold text-primary-blue">${photo.description}</p>
+                        <p class="text-xs text-gray-600">Date/Time: ${new Date(photo.dateTime).toLocaleString()}</p>
+                    `;
+                    printPhotoEntriesContainer.appendChild(photoDiv);
+                }
+            });
+        }
+        
+        // --- Initialization and Event Listeners ---
+        window.onload = function() {
+            // Load and initialize data
+            loadReportData();
+            
+            // Set today's date if fields are empty
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            const formattedDate = `${yyyy}-${mm}-${dd}`;
+            
+            if (!document.getElementById('reportDate').value) document.getElementById('reportDate').value = formattedDate;
+            if (!document.getElementById('locatingDate').value) document.getElementById('locatingDate').value = formattedDate;
+            if (!document.getElementById('dbydInquiryDate').value) document.getElementById('dbydInquiryDate').value = formattedDate; 
+            
+            // Populate the Accuracy select dropdown with QL options
+            document.getElementById('accuracyAchieved').innerHTML = generateAccuracyOptions();
+
+            // Initial update of the print output
+            updatePrintOutput();
+
+            // --- Event Listeners ---
+            document.getElementById('addServiceButton').addEventListener('click', () => addServiceEntry(serviceTemplate));
+            document.getElementById('addPhotoButton').addEventListener('click', () => addPhotoEntry());
